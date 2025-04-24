@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "containers": [
+    {
+      "type": "database",
+      "name": "postgres",
+      "image": "postgres:15",
+      "ports": [
+        {
+          "port": 5432,
+          "protocol": "TCP",
+          "app_protocol": null,
+          "exposed": false
+        }
+      ],
+      "environment_variables": [
+        { "key": "POSTGRES_USER", "value": "django" },
+        { "key": "POSTGRES_PASSWORD", "value": "django" },
+        { "key": "POSTGRES_DB", "value": "app_db" }
+      ],
+      "cmd_override": [
+        "sh",
+        "-c",
+        "docker-entrypoint.sh postgres & sleep 5 && psql -U $POSTGRES_USER -d postgres -c 'CREATE DATABASE app_db;' && wait"
+      ]
+    },
+    {
+      "type": "database",
+      "name": "redis",
+      "image": "redis:7",
+      "ports": [
+        {
+          "port": 6379,
+          "protocol": "TCP",
+          "app_protocol": null,
+          "exposed": false
+        }
+      ],
+      "environment_variables": []
+    },
+    {
+      "type": "app",
+      "name": "django-app",
+      "image": null,
+      "ports": [
+        {
+          "port": 8000,
+          "protocol": "TCP",
+          "exposed": true,
+          "app_protocol": "HTTP"
+        }
+      ],
+      "environment_variables": [
+        { "key": "DEBUG", "value": "1" },
+        { "key": "REDIS_CACHE_HOST", "value": "redis:6379/0" },
+        { "key": "DATABASE_NAME", "value": "app_db" },
+        { "key": "DATABASE_USER", "value": "django" },
+        { "key": "DATABASE_PASS", "value": "django" },
+        { "key": "DATABASE_PORT", "value": "5432" },
+        { "key":  "DATABASE_TYPE", "value": "postgres" },
+        { "key":  "SECRET_KEY", "value": "some!random!secret!key!use!online!generator!to!get" },
+        { "key":  "URL", "value": "*" },
+        { "key":  "PROXY_IP", "value": "localhost" },
+        { "key":  "BRANCH", "value": "debug" },
+        { "key":  "DEBUG", "value": "False" },
+        { "key":  "SITE_URL", "value": "http://myfinances.example.com" },
+        { "key":  "SITE_NAME", "value": "myfinances" }
+      ],
+      "dependency": {
+        "container": "postgres",
+        "condition": "START"
+      }
+    }
+  ]
+}
