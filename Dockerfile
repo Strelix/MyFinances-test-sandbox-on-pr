@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY webpack.common.js webpack.prod.js ./
 
-COPY ./frontend/static/ ./
+COPY ./frontend/static/ ./frontend/static/
 
 
 RUN npm run tailwind-minify && npm run webpack-build
