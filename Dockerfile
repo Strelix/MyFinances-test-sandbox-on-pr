@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM node:18-alpine AS frontend-builder
 
-WORKDIR /MyFiances
+WORKDIR /MyFinances
 
 COPY package.json package-lock.json ./
 
@@ -9,6 +9,7 @@ RUN npm ci
 COPY webpack.common.js webpack.prod.js ./
 
 COPY ./frontend/static/ ./
+
 
 RUN npm run tailwind-minify && npm run webpack-build
 
