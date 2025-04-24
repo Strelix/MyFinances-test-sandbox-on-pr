@@ -47,6 +47,7 @@ RUN apk del .build-deps
 
 RUN poetry install --without dev,mysql,postgres --no-root && rm -rf $POETRY_CACHE_DIR
 
+COPY --from=frontend-builder /app /app
 COPY . .
 
 RUN chmod +x infrastructure/backend/scripts/*
