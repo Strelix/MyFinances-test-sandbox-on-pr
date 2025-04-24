@@ -44,7 +44,7 @@
       "image": null,
       "ports": [
         {
-          "port": 8000,
+          "port": 9012,
           "protocol": "TCP",
           "exposed": true,
           "app_protocol": "HTTP"
