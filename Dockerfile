@@ -1,3 +1,18 @@
+FROM --platform=$BUILDPLATFORM node18 AS frontend-builder
+
+WORKDIR /MyFiances
+
+COPY package.json package-lock.json ./
+
+RUN npm ci
+
+COPY webpack.common.js webpack.prod.js ./
+
+COPY ./frontend/static/ ./
+
+RUN npm run tailwind-minify && npm run webpack-build
+
+
 FROM --platform=$BUILDPLATFORM python:3.12-alpine
 
 RUN pip install poetry==1.7.1

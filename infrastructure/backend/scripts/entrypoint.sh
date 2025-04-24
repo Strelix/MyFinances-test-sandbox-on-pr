@@ -1,11 +1,5 @@
 #!/bin/sh
 
-echo "[SYSTEM] [JS] Frontend Builds"
-
-npm ci
-npm run tailwind-build
-npm run webpack-build
-
 echo "[SYSTEM] [DJANGO] About to migrate"
 python3 manage.py migrate --no-input
 
