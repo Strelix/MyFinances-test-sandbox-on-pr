@@ -1,5 +1,16 @@
 {
+  "$schema": "./strelix.json",
   "version": 1,
+  "volumes": [
+    {
+      "name": "myfinances_static_files",
+      "type": "bind"
+    },
+    {
+      "name": "nginx_config",
+      "type": "bind"
+    }
+  ],
   "containers": [
     {
       "type": "database",
@@ -46,7 +57,7 @@
         {
           "port": 9012,
           "protocol": "TCP",
-          "exposed": true,
+          "exposed": false,
           "app_protocol": "HTTP"
         }
       ],
@@ -66,10 +77,48 @@
         { "key":  "SITE_URL", "value": "http://myfinances.example.com" },
         { "key":  "SITE_NAME", "value": "myfinances" }
       ],
+      "mount_points": [
+        {
+          "source_volume": "nginx_config",
+          "container_path": "/mnt/nginx_config/",
+          "read_only": false
+        },
+        {
+          "source_volume": "myfinances_static_files",
+          "container_path": "/mnt/static/",
+          "read_only": false
+        }
+      ],
       "dependency": {
         "container": "postgres",
         "condition": "START"
       }
+    },
+    {
+      "type": "app",
+      "name": "nginx",
+      "image": "nginx:latest",
+      "ports": [
+        {
+          "name": "nginx",
+          "app_protocol": "HTTP",
+          "exposed": true,
+          "port": 80,
+          "protocol": "TCP"
+        }
+      ],
+      "mount_points": [
+        {
+          "source_volume": "nginx_config",
+          "container_path": "/etc/nginx/conf.d/nginx.conf",
+          "read_only": true
+        },
+        {
+          "source_volume": "myfinances_static_files",
+          "container_path": "/srv/http/static/",
+          "read_only": true
+        }
+      ]
     }
   ]
 }
