@@ -110,7 +110,7 @@
       "mount_points": [
         {
           "source_volume": "nginx_config",
-          "container_path": "/etc/nginx/conf.d/nginx.conf",
+          "container_path": "/etc/nginx/conf.d",
           "read_only": true
         },
         {
