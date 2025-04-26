@@ -103,7 +103,7 @@
           "name": "nginx",
           "app_protocol": "HTTP",
           "exposed": true,
-          "port": 80,
+          "port": 10012,
           "protocol": "TCP"
         }
       ],
