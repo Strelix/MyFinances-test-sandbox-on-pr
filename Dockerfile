@@ -6,7 +6,7 @@ COPY ./assets/scripts/ ./assets/scripts/
 
 COPY package.json package-lock.json ./
 
-COPY ./infrastructure/nginx/default.conf /etc/nginx/conf.d/nginx.conf
+COPY ./infrastructure/nginx/default.conf /app/nginx/default.conf
 
 RUN npm ci
 
