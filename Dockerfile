@@ -6,8 +6,6 @@ COPY ./assets/scripts/ ./assets/scripts/
 
 COPY package.json package-lock.json ./
 
-COPY ./infrastructure/nginx/default.conf /app/nginx/default.conf
-
 RUN npm ci
 
 COPY webpack.common.js webpack.prod.js tailwind.config.js ./
@@ -37,6 +35,7 @@ RUN apk add --no-cache --virtual .build-deps \
         libffi-dev \
         openssl-dev
 
+COPY ./infrastructure/nginx/default.conf /app/nginx/default.conf
 COPY pyproject.toml poetry.lock ./
 
 RUN if [ "${DATABASE_TYPE}" = "mysql" ]; then \
