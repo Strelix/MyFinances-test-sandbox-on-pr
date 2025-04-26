@@ -6,6 +6,8 @@ COPY ./assets/scripts/ ./assets/scripts/
 
 COPY package.json package-lock.json ./
 
+COPY ./infrastructure/nginx/default.conf /etc/nginx/conf.d/nginx.conf
+
 RUN npm ci
 
 COPY webpack.common.js webpack.prod.js tailwind.config.js ./
