@@ -51,7 +51,7 @@
     },
     {
       "type": "app",
-      "name": "django-app",
+      "name": "myfinances-django",
       "image": null,
       "ports": [
         {
