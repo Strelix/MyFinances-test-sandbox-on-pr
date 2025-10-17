@@ -96,6 +96,9 @@
       "dependency": {
         "container": "postgres",
         "condition": "START"
+      },
+      "build": {
+        "dockerfile": "./infrastructure/backend/Dockerfile"
       }
     },
     {
