@@ -13,13 +13,14 @@
   ],
   "containers": [
     {
-      "type": "database",
       "name": "postgres",
+      "type": "database",
       "image": "postgres:15",
       "ports": [
         {
+          "name": "postgres",
           "port": 5432,
-          "protocol": "TCP",
+          "protocol": "tcp",
           "app_protocol": null,
           "exposed": false
         }
@@ -41,8 +42,9 @@
       "image": "redis:7",
       "ports": [
         {
+          "name": "redis",
           "port": 6379,
-          "protocol": "TCP",
+          "protocol": "tcp",
           "app_protocol": null,
           "exposed": false
         }
@@ -55,16 +57,18 @@
       "image": null,
       "ports": [
         {
+          "name": "django",
           "port": 9012,
-          "protocol": "TCP",
+          "protocol": "tcp",
           "exposed": false,
-          "app_protocol": "HTTP"
+          "app_protocol": "http"
         }
       ],
       "environment_variables": [
         { "key": "DEBUG", "value": "1" },
         { "key": "REDIS_CACHE_HOST", "value": "localhost:6379/0" },
         { "key": "DATABASE_NAME", "value": "app_db" },
+        { "key": "DATABASE_HOST", "value": "app_db" },
         { "key": "DATABASE_USER", "value": "django" },
         { "key": "DATABASE_PASS", "value": "django" },
         { "key": "DATABASE_PORT", "value": "5432" },
@@ -101,10 +105,10 @@
       "ports": [
         {
           "name": "nginx",
-          "app_protocol": "HTTP",
+          "app_protocol": "http",
           "exposed": true,
           "port": 10012,
-          "protocol": "TCP"
+          "protocol": "tcp"
         }
       ],
       "mount_points": [
