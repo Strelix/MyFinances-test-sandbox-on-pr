@@ -123,7 +123,7 @@
         {
           "source_volume": "myfinances_static_files",
           "container_path": "/srv/http/static/",
-          "read_only": true
+          "read_only": false
         }
       ]
     }
