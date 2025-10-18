@@ -22,7 +22,10 @@ python3 manage.py collectstatic --no-input
 
 # Start Gunicorn in the background
 echo "[SYSTEM] [DJANGO] Starting Gunicorn"
-gunicorn settings.wsgi:application --bind 0.0.0.0:9012 --workers 2 &
+
+DJANGO_WORKERS="${DJANGO_WORKERS:-1}"
+
+gunicorn settings.wsgi:application --bind 0.0.0.0:9012 --workers "$DJANGO_WORKERS" &
 
 # Start Celery in the background
 #echo "[SYSTEM] [CELERY] Starting Celery"
