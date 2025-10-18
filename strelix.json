@@ -118,7 +118,7 @@
         {
           "source_volume": "nginx_config",
           "container_path": "/etc/nginx/conf.d/",
-          "read_only": true
+          "read_only": false
         },
         {
           "source_volume": "myfinances_static_files",
