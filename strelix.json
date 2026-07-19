@@ -1,0 +1,131 @@
+{
+  "$schema": "./strelix.json",
+  "version": 1,
+  "volumes": [
+    {
+      "name": "myfinances_static_files",
+      "type": "bind"
+    },
+    {
+      "name": "nginx_config",
+      "type": "bind"
+    }
+  ],
+  "containers": [
+    {
+      "name": "postgres",
+      "type": "database",
+      "image": "postgres:15",
+      "ports": [
+        {
+          "name": "postgres",
+          "port": 5432,
+          "protocol": "tcp",
+          "app_protocol": null,
+          "exposed": false
+        }
+      ],
+      "environment_variables": [
+        { "key": "POSTGRES_USER", "value": "django" },
+        { "key": "POSTGRES_PASSWORD", "value": "django" },
+        { "key": "POSTGRES_DB", "value": "app_db" }
+      ],
+      "cmd_override": [
+        "sh",
+        "-c",
+        "docker-entrypoint.sh postgres & sleep 5 && psql -U $POSTGRES_USER -d postgres -c 'CREATE DATABASE app_db;' && wait"
+      ]
+    },
+    {
+      "type": "database",
+      "name": "redis",
+      "image": "redis:7",
+      "ports": [
+        {
+          "name": "redis",
+          "port": 6379,
+          "protocol": "tcp",
+          "app_protocol": null,
+          "exposed": false
+        }
+      ],
+      "environment_variables": []
+    },
+    {
+      "type": "app",
+      "name": "myfinances-django",
+      "image": null,
+      "ports": [
+        {
+          "name": "django",
+          "port": 9012,
+          "protocol": "tcp",
+          "exposed": false,
+          "app_protocol": "http"
+        }
+      ],
+      "environment_variables": [
+        { "key": "DEBUG", "value": "1" },
+        { "key": "REDIS_CACHE_HOST", "value": "localhost:6379/0" },
+        { "key": "DATABASE_NAME", "value": "app_db" },
+        { "key": "DATABASE_HOST", "value": "app_db" },
+        { "key": "DATABASE_USER", "value": "django" },
+        { "key": "DATABASE_PASS", "value": "django" },
+        { "key": "DATABASE_PORT", "value": "5432" },
+        { "key":  "DATABASE_TYPE", "value": "postgres" },
+        { "key":  "SECRET_KEY", "value": "some!random!secret!key!use!online!generator!to!get" },
+        { "key":  "URL", "value": "*" },
+        { "key":  "PROXY_IP", "value": "localhost" },
+        { "key":  "BRANCH", "value": "debug" },
+        { "key":  "DEBUG", "value": "False" },
+        { "key":  "SITE_URL", "value": "http://myfinances.example.com" },
+        { "key":  "SITE_NAME", "value": "myfinances" }
+      ],
+      "mount_points": [
+        {
+          "source_volume": "nginx_config",
+          "container_path": "/mnt/nginx_config/",
+          "read_only": false
+        },
+        {
+          "source_volume": "myfinances_static_files",
+          "container_path": "/mnt/static/",
+          "read_only": false
+        }
+      ],
+      "dependency": {
+        "container": "postgres",
+        "condition": "START"
+      },
+      "build": {
+        "dockerfile": "./Dockerfile"
+      }
+    },
+    {
+      "type": "app",
+      "name": "nginx",
+      "image": "nginx:latest",
+      "ports": [
+        {
+          "name": "nginx",
+          "app_protocol": "http",
+          "exposed": true,
+          "port": 10012,
+          "protocol": "tcp"
+        }
+      ],
+      "mount_points": [
+        {
+          "source_volume": "nginx_config",
+          "container_path": "/etc/nginx/conf.d/",
+          "read_only": false
+        },
+        {
+          "source_volume": "myfinances_static_files",
+          "container_path": "/srv/http/static/",
+          "read_only": false
+        }
+      ]
+    }
+  ]
+}
